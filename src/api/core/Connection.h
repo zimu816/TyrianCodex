@@ -135,7 +135,7 @@ namespace Api
         // config
         std::mutex  _keyMtx;
         std::string _apiKey;
-        Locale      _locale = Locale::En;
+        Locale      _locale = Locale::Zh;
         TokenInfo   _tokenInfo;   // main-thread only
 
         // pipeline
