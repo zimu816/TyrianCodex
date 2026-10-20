@@ -8,6 +8,7 @@
 #include "app/TpEligibility.h"
 #include "app/StaticData.h"   // WarmCurrencies (wallet/session currency catalog)
 #include "ui/Gw2Ui.h"
+#include "ui/fonts/CjkFont.h"   // private CJK atlas: Nexus/Menomonia bake Latin only
 #include "util/Textures.h"
 #include "ui/tabs/OptionsTab.h"
 #include "ui/tabs/JournalTab.h"
@@ -32,6 +33,16 @@
 
 void ApplyFontChoice(App& app)
 {
+    // CJK first. Nexus's shared atlas and the Menomonia faces are baked over Latin ranges only, so any text
+    // outside them (Chinese item/zone/achievement names) would draw as the fallback '?'. When a CJK face is
+    // available we draw every run with it -- and returning here also keeps the "no rungs loaded" branch below
+    // from resetting the font back to nullptr on the next frame.
+    if (ImFont* cjk = CjkFont::Get())
+    {
+        Gw2Ui::SetGw2Font(cjk, cjk);
+        return;
+    }
+
     // Build the Gw2Ui native-size ladder from whatever rungs have loaded so far; off (or nothing loaded yet)
     // reverts to the Nexus font. The text core then draws each run from the nearest rung at scale ~1.0 (crisp).
     if (app.config.useGw2Font)

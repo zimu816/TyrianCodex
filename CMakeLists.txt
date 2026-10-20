@@ -230,6 +230,7 @@ set(SOURCES
     src/ui/TrayMenu.cpp
     src/ui/QuickMenu.cpp
     src/ui/WaypointFavorites.cpp
+    src/ui/fonts/CjkFont.cpp
     src/ui/wiki/WikiHtmlSanitizer.cpp
     src/ui/wiki/WikiStyleAdapter.cpp
     src/ui/wiki/WikiContainer.cpp
