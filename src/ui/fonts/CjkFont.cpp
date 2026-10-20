@@ -127,19 +127,22 @@ namespace
                 IM_DELETE(atlas);
                 continue;
             }
-            if (!font->FindGlyphNoFallback((ImWchar)0x4E2D))   // '中'
+            unsigned char* pixels = nullptr;
+            int width = 0, height = 0, bpp = 0;
+            atlas->GetTexDataAsRGBA32(&pixels, &width, &height, &bpp);   // this is what BUILDS the atlas
+            if (!pixels || width <= 0 || height <= 0 || bpp != 4)
             {
-                Dbg("face %s: no U+4E2D in atlas", face.c_str());
+                Dbg("face %s: rasterize failed (%dx%d bpp%d)", face.c_str(), width, height, bpp);
                 IM_DELETE(atlas);
                 continue;
             }
 
-            unsigned char* pixels = nullptr;
-            int width = 0, height = 0, bpp = 0;
-            atlas->GetTexDataAsRGBA32(&pixels, &width, &height, &bpp);
-            if (!pixels || width <= 0 || height <= 0 || bpp != 4)
+            // The glyph table (and therefore FindGlyphNoFallback) only exists once the atlas has been built,
+            // so this check MUST come after GetTexDataAsRGBA32. Doing it earlier always reported "no U+4E2D"
+            // and rejected every face.
+            if (!font->FindGlyphNoFallback((ImWchar)0x4E2D))   // '中'
             {
-                Dbg("face %s: rasterize failed (%dx%d bpp%d)", face.c_str(), width, height, bpp);
+                Dbg("face %s: no U+4E2D in atlas", face.c_str());
                 IM_DELETE(atlas);
                 continue;
             }
