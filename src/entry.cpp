@@ -800,7 +800,10 @@ static void Render()
         // atlas is up this is just two pointer compares per frame, and it also wins the frame race against
         // ApplyFontChoice resetting the font to Menomonia/nullptr after a Nexus atlas rebuild.
         if (ImFont* cjk = CjkFont::Get())
+        {
             Gw2Ui::SetGw2Font(cjk, cjk);
+            CjkFont::DrawDiagnostic();   // TEMP: sample string straight to the foreground list
+        }
 
         InputProbe::SetEnabled(g_app->config.inputProbe); // one gate: Gw2Ui's text boxes check this before reporting
         if (g_app->config.inputProbe)

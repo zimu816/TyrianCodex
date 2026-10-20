@@ -18,4 +18,8 @@ namespace CjkFont
 
     // Releases the atlas + texture. Call from the addon's unload path.
     void Shutdown();
+
+    // TEMPORARY diagnostic: draws a fixed sample string with this atlas straight onto the foreground draw
+    // list (no Gw2Ui layout, no clipping). Isolates "the texture is wrong" from "the label path clips it".
+    void DrawDiagnostic();
 }

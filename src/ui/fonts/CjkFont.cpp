@@ -225,6 +225,23 @@ ImFont* CjkFont::Get()
     return Build() ? g_font : nullptr;
 }
 
+void CjkFont::DrawDiagnostic()
+{
+    if (!g_font) return;
+    static bool s_logged = false;
+    if (!s_logged)
+    {
+        s_logged = true;
+        Dbg("diag: font=%p atlas=%p texid=%p view.Resource=%p %ux%u fontsize=%.1f",
+            (void*)g_font, (void*)g_atlas, (void*)g_atlas->TexID, (void*)g_view.Resource,
+            g_view.Width, g_view.Height, g_font->FontSize);
+    }
+    ImDrawList* dl = ImGui::GetForegroundDrawList();
+    dl->AddRectFilled(ImVec2(30, 30), ImVec2(560, 120), IM_COL32(0, 0, 0, 230));
+    dl->AddText(g_font, 28.0f, ImVec2(42, 40), IM_COL32(255, 255, 0, 255), "CJK diag: 中文测试 ABC 0123");
+    dl->AddText(g_font, 16.0f, ImVec2(42, 78), IM_COL32(255, 255, 255, 255), "16px: 精金守卫装置 / Adamant Guard");
+}
+
 void CjkFont::Shutdown()
 {
     ReleaseAll();
