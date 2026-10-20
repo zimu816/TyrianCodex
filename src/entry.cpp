@@ -6,6 +6,7 @@
 #include "util/Textures.h"
 #include "util/ImageCache.h"
 #include "util/OwnedTex.h"       // addon-owned D3D11 textures: per-frame LRU tick + release-all on unload
+#include "ui/fonts/CjkFont.h"    // private CJK atlas: Nexus's and Menomonia's atlases bake Latin ranges only
 #include "app/DataBootstrap.h"   // self-download the bundled data/ folder (Nexus ships only the DLL)
 #include "resources/resources.h" // DLL-embedded tray-icon resource ids (present before the data download)
 #include "model/ObjectiveTypes.h"
@@ -794,6 +795,13 @@ static void Render()
         return;
     try
     {
+        // CJK UI font. Built HERE, on the render thread: GW2's D3D11 device is single-threaded, so creating the
+        // atlas texture from Nexus's font callback (which is where ApplyFontChoice runs) fails outright. Once the
+        // atlas is up this is just two pointer compares per frame, and it also wins the frame race against
+        // ApplyFontChoice resetting the font to Menomonia/nullptr after a Nexus atlas rebuild.
+        if (ImFont* cjk = CjkFont::Get())
+            Gw2Ui::SetGw2Font(cjk, cjk);
+
         InputProbe::SetEnabled(g_app->config.inputProbe); // one gate: Gw2Ui's text boxes check this before reporting
         if (g_app->config.inputProbe)
             InputProbe::SampleFrame(); // FIRST: ImGui's character queue is drained by whichever InputText consumes it
