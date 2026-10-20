@@ -13,6 +13,7 @@ namespace
     ImFontAtlas*              g_atlas = nullptr;
     ImFont*                   g_font  = nullptr;
     ID3D11ShaderResourceView* g_srv   = nullptr;
+    Texture_t                 g_view{};   // Nexus's texture view -- this, not the raw SRV, is the ImTextureID
     bool                      g_givenUp = false;
     int                       g_attempts = 0;
 
@@ -186,7 +187,15 @@ namespace
             }
 
             device->Release();
-            atlas->TexID = static_cast<ImTextureID>(srv);
+
+            // Nexus's ImTextureID is a Texture_t* (Width/Height/Resource), not the bare ID3D11ShaderResourceView*.
+            // Handing it the raw SRV makes its renderer read {Width,Height,Resource} out of the SRV's vtable and
+            // bind garbage, which draws nothing at all.
+            g_view.Width    = static_cast<uint32_t>(width);
+            g_view.Height   = static_cast<uint32_t>(height);
+            g_view.Resource = srv;
+
+            atlas->TexID = static_cast<ImTextureID>(&g_view);
             g_atlas = atlas;
             g_font  = font;
             g_srv   = srv;
