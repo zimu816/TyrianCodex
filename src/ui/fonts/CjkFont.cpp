@@ -244,7 +244,6 @@ void CjkFont::DrawDiagnostic()
     dl->AddText(g_font, 30.0f, ImVec2(520, 600), IM_COL32(255, 255, 0, 255), "中文 ABC 123");
     dl->AddText(g_font, 16.0f, ImVec2(520, 645), IM_COL32(255, 255, 255, 255), "16px 精金守卫装置 Adamant");
 }
-}
 
 void CjkFont::Shutdown()
 {
