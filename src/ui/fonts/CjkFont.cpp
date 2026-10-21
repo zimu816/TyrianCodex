@@ -237,9 +237,13 @@ void CjkFont::DrawDiagnostic()
             g_view.Width, g_view.Height, g_font->FontSize);
     }
     ImDrawList* dl = ImGui::GetForegroundDrawList();
-    dl->AddRectFilled(ImVec2(30, 30), ImVec2(560, 120), IM_COL32(0, 0, 0, 230));
-    dl->AddText(g_font, 28.0f, ImVec2(42, 40), IM_COL32(255, 255, 0, 255), "CJK diag: 中文测试 ABC 0123");
-    dl->AddText(g_font, 16.0f, ImVec2(42, 78), IM_COL32(255, 255, 255, 255), "16px: 精金守卫装置 / Adamant Guard");
+    dl->AddRectFilled(ImVec2(510, 410), ImVec2(860, 690), IM_COL32(0, 0, 0, 235));
+    // (a) the atlas AS AN IMAGE: does the texture hold readable glyphs at all?
+    dl->AddImage(g_atlas->TexID, ImVec2(520, 420), ImVec2(840, 580));
+    // (b) the same atlas through ImGui's font path. If (a) is readable and this is not, the font/UV path is at fault.
+    dl->AddText(g_font, 30.0f, ImVec2(520, 600), IM_COL32(255, 255, 0, 255), "中文 ABC 123");
+    dl->AddText(g_font, 16.0f, ImVec2(520, 645), IM_COL32(255, 255, 255, 255), "16px 精金守卫装置 Adamant");
+}
 }
 
 void CjkFont::Shutdown()

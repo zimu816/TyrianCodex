@@ -801,8 +801,8 @@ static void Render()
         // ApplyFontChoice resetting the font to Menomonia/nullptr after a Nexus atlas rebuild.
         if (ImFont* cjk = CjkFont::Get())
         {
-            Gw2Ui::SetGw2Font(cjk, cjk);
-            CjkFont::DrawDiagnostic();   // TEMP: sample string straight to the foreground list
+            (void)cjk;                   // TEMP: keep the stock UI font so the addon stays readable while we debug
+            CjkFont::DrawDiagnostic();   // TEMP: atlas as image + font sample, drawn without Gw2Ui
         }
 
         InputProbe::SetEnabled(g_app->config.inputProbe); // one gate: Gw2Ui's text boxes check this before reporting
